@@ -1,0 +1,3 @@
+/promo/ export-ignore
+/Makefile export-ignore
+.* export-ignore
