@@ -4,6 +4,7 @@
         css_injected = false,
         elements_hidden = false,
         uuid = "FCFB2A52_C7DC_4B44_B242_0DC15B13CA12",
+        cooldown = 0,
         timeout = 0;
 
     if (window[uuid]) {
@@ -16,23 +17,24 @@
         if (!css_injected) {
             var style = document.createElement("style");
             style.appendChild(document.createTextNode(
-                "." + uuid + " { opacity: 0 !important; transition: opacity 500ms !important; }"
+                "." + uuid + " { opacity: 0 !important; transition: opacity 100ms !important; }"
             ));
             document.head.appendChild(style);
             css_injected = true;
         }
         active = true;
         firstRun = true;
-        checkFixedElements();
+        hideFixedElements();
     }
 
     function deactivate() {
         unhideFixedElements();
         active = false;
+        if (timeout)
+            window.clearTimeout(timeout);
     }
 
     function hideFixedElements() {
-        console.info("HideFixedElements: hiding");
         var elems = document.getElementsByTagName("*");
         for (var i = 0; i < elems.length; i++) {
             var e = elems[i];
@@ -52,24 +54,22 @@
     }
 
     function unhideFixedElements() {
-        console.info("HideFixedElements: unhiding");
         var elems = document.getElementsByClassName(uuid);
         for (var i = elems.length - 1; i >= 0; i--)
             elems[i].classList.remove(uuid);
         elements_hidden = false;
     }
 
-    function checkFixedElements() {
-        timeout = 0;
-        if (active)
-            hideFixedElements();
-        else
-            unhideFixedElements();
-    }
-
     window.addEventListener("scroll", function() {
-        if (active && !timeout)
-            timeout = window.setTimeout(checkFixedElements, 250);
+        if (active && !timeout) {
+            var now = new Date();
+            var when = (now - cooldown < 500) ? 250 : 0;
+            timeout = window.setTimeout(function() {
+                timeout = 0;
+                hideFixedElements();
+            }, when);
+            cooldown = +now;
+        }
     });
 
     chrome.runtime.onMessage.addListener(function(msg) {

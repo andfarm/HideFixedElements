@@ -3,7 +3,13 @@
 
     "name": "Hide Fixed Elements",
     "description": "Hide fixed elements on a page to open up more viewing space",
-    "version": "1.0",
+    "version": "1.1",
+
+    "applications": {
+        "gecko": {
+            "id": "hidefixedelements@commonground.systems"
+        }
+    },
 
     "icons": {
         "48": "icon48.png",
@@ -11,6 +17,10 @@
     },
 
     "browser_action": {
+        "default_icon": {
+            "48": "icon48.png",
+            "128": "icon128.png"
+        }
     },
 
     "background": {
