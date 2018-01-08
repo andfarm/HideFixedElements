@@ -17,7 +17,7 @@
         if (!css_injected) {
             var style = document.createElement("style");
             style.appendChild(document.createTextNode(
-                "." + uuid + " { opacity: 0 !important; transition: opacity 100ms !important; }"
+                "." + uuid + " { opacity: 0 !important; visibility: hidden !important; transition: opacity 100ms, visibility 0s linear 100ms !important; }"
             ));
             document.head.appendChild(style);
             css_injected = true;
